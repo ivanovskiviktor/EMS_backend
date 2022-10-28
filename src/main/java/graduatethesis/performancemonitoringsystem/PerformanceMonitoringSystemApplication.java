@@ -12,9 +12,6 @@ public class PerformanceMonitoringSystemApplication {
         SpringApplication.run(PerformanceMonitoringSystemApplication.class, args);
     }
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 
 }

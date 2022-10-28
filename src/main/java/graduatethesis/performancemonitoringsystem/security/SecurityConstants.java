@@ -7,7 +7,7 @@ public class SecurityConstants {
     public static final String HEADER_STRING = "Authorization";
     public static final String REQUEST_PARAM_TOKEN = "access_token";
     public static final long EXPIRATION_TIME = 864_000_000; // 10 dena
-    public static final String SECRET = "PMS@AutTHT0ken";
+    public static final String SECRET = "EMS";
     public static final String LOGIN_URL = "/rest/login";
     public static final String LOGOUT = "/rest/logout";
     public static final String PUBLIC_URLS="/rest/public/**";

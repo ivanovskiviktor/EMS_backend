@@ -3,7 +3,10 @@ package graduatethesis.performancemonitoringsystem.security;
 
 import graduatethesis.performancemonitoringsystem.service.interfaces.UserService;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,7 +20,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 
 
+
     @Configuration
+    @EnableWebSecurity
+    @EnableGlobalMethodSecurity(prePostEnabled = true)
     public class WebSecurity extends WebSecurityConfigurerAdapter {
 
         private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -36,7 +42,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
         protected void configure(HttpSecurity http) throws Exception {
             http.cors()
                     .and().csrf().disable()
-                    .authorizeRequests().antMatchers("/rest/login","/rest/user/signup").permitAll()
+                    .authorizeRequests().antMatchers("/rest/lxogin","/rest/user/signup").permitAll()
                     .antMatchers("/rest/**").authenticated()
                     .and()
                     .addFilter(new JWTAuthorizationFilter(authenticationManager(), userService))
@@ -44,6 +50,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 
         }
+
+        @Bean
+        public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+            return authenticationConfiguration.getAuthenticationManager();
+        }
+
 
         @Bean
         CorsConfigurationSource corsConfigurationSource() {

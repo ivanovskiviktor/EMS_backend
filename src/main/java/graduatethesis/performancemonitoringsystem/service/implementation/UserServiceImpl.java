@@ -249,7 +249,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         }
 
-        personService.create(user.getPerson().getFirstName(),user.getPerson().getLastName());
+//        Person person = personService.create(user.getPerson().getFirstName(),user.getPerson().getLastName());
         userRepository.save(user);
 
         if (user.getUserRoles()  == null || user.getUserRoles() .stream().noneMatch(role -> role.getRole().getName().equals(UserRoles.ROLE_EMPTY_ROLE))) {
@@ -257,9 +257,7 @@ public class UserServiceImpl implements UserService {
         }
 
 
-        Person person = user.getPerson();
-        //  person.setEmail(user.getEmail());
-        user.setPerson(personService.create(user.getPerson().getFirstName(),user.getPerson().getLastName()));
+//        person.setUser(user);
         if (!user.isEnabled()) {
             user.setEnabled(false);
         }
