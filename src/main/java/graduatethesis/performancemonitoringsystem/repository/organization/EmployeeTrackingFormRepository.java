@@ -41,7 +41,7 @@ public interface EmployeeTrackingFormRepository extends JpaRepository<EmployeeTr
     List<EmployeeTrackingForm> findAllByUser(@Param("employeeTrackingFormFilter") EmployeeTrackingFormFilter employeeTrackingFormFilter, Long id);
 
     @Query("select etf from EmployeeTrackingForm etf order by etf.organizationalDepartmentWorkingItem.workingItem.name, etf.status.name, etf.organizationalDepartmentWorkingItem.organizationalDepartment.name")
-    List<EmployeeTrackingForm> findAllOrderedByOrganizationalUnit();
+    List<EmployeeTrackingForm> findAllOrderedByOrganizationalDepartment();
 
     @Query("select etf from EmployeeTrackingForm etf order by etf.organizationalDepartmentWorkingItem.workingItem.name, etf.status.name, etf.user.person.firstName, etf.user.person.lastName")
     List<EmployeeTrackingForm> findAllOrderedByEmployee();

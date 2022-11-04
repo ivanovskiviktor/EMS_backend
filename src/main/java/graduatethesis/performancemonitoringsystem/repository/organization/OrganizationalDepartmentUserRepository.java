@@ -18,11 +18,11 @@ public interface OrganizationalDepartmentUserRepository extends JpaRepository<Or
     @Transactional
     @Modifying
     @Query("delete from OrganizationalDepartmentUser odu where odu.urUserId.id = :uid and odu.organizationalDepartment.id = :oid")
-    void deleteByOrganizationalUnitAndUser(Long oid, Long uid);
+    void deleteByOrganizationalDepartmentAndUser(Long oid, Long uid);
 
     @Query("select odu from OrganizationalDepartmentUser odu where odu.urUserId.id = :userId and odu.isHead = true")
     List<OrganizationalDepartmentUser> findAllWhereUserIsHead(Long userId);
 
     @Query("select odu from OrganizationalDepartmentUser odu where odu.organizationalDepartment.id = :orgDepartmentId and odu.isHead = true")
-    List<OrganizationalDepartmentUser> findAllByOrganizationalUnitId(Long orgDepartmentId);
+    List<OrganizationalDepartmentUser> findAllByOrganizationalDepartmentId(Long orgDepartmentId);
 }

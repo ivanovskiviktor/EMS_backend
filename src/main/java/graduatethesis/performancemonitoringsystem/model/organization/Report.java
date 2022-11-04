@@ -1,6 +1,7 @@
 package graduatethesis.performancemonitoringsystem.model.organization;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import graduatethesis.performancemonitoringsystem.model.helpers.ReportHelper;
 import graduatethesis.performancemonitoringsystem.model.users.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,6 +48,58 @@ public class Report implements Comparable<Report> {
     @ManyToOne
     @JoinColumn(name = "o_submitter_user_id")
     private User submitter;
+
+    @JsonIgnore
+    public ReportHelper getAsReportHelper(User user){
+        ReportHelper reportHelper = new ReportHelper();
+
+        reportHelper.setDescription(description);
+        if(employeeTrackingForm.getUser()!=null){
+            if(employeeTrackingForm.getUser().getPerson()!=null)
+            {
+                reportHelper.setFirstName(employeeTrackingForm.getUser().getPerson().getFirstName());
+            }
+        }
+        if(employeeTrackingForm.getUser()!=null){
+            if(employeeTrackingForm.getUser().getPerson()!=null)
+            {
+                reportHelper.setLastName(employeeTrackingForm.getUser().getPerson().getLastName());
+            }
+        }
+        reportHelper.setHours(hours);
+        reportHelper.setMinutes(minutes);
+        reportHelper.setEmployeeTrackingFormId(employeeTrackingForm.getId());
+        reportHelper.setId(id);
+        if(approver!=null){
+            reportHelper.setApprover(approver.getEmail());
+        }
+        if(submitter!=null){
+            reportHelper.setSubmitter(submitter.getEmail());
+        }
+        reportHelper.setSubmissionDate(submissionDate);
+        reportHelper.setTaskDescription(employeeTrackingForm.getDescription());
+        reportHelper.setWorkingItemName(employeeTrackingForm.getOrganizationalDepartmentWorkingItem().getWorkingItem().getName());
+        if(accepted==null || !accepted){
+            reportHelper.setIsAccepted(false);
+        }else{
+            reportHelper.setIsAccepted(true);
+        }
+        if(this.hasPreviousReport == null || !this.hasPreviousReport){
+            reportHelper.setHasPreviousReport(false);
+        }else{
+            reportHelper.setHasPreviousReport(true);
+        }
+        boolean isAssigned = employeeTrackingForm.getTimeTrackingFormUsers().stream().anyMatch(c->c.getUser().getId().equals(user.getId()));
+        if(submitter.getHead()!=null){
+            if(this.submitter.getHead().getId().equals(user.getId())){
+                reportHelper.setApproveByMe(true);
+            }else{
+                reportHelper.setApproveByMe(false);
+            }
+        }
+        return reportHelper;
+    }
+
 
     @Override
     public int compareTo(Report o) {

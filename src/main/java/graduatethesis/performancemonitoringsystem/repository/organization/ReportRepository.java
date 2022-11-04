@@ -1,6 +1,7 @@
 package graduatethesis.performancemonitoringsystem.repository.organization;
 
 import graduatethesis.performancemonitoringsystem.model.filters.ReportFilter;
+import graduatethesis.performancemonitoringsystem.model.helpers.ReportFrontHelper;
 import graduatethesis.performancemonitoringsystem.model.organization.Report;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -47,7 +48,8 @@ public interface ReportRepository extends JpaRepository<Report,Long> {
             "(:#{#reportFilter.approverEmail==null}=true or lower(approver.email) like %:#{#reportFilter.approverEmail}%) and " +
             "(:#{#reportFilter.description==null}=true or lower(r.description) like %:#{#reportFilter.getDescriptionToLower()}%) and " +
             "(r.submissionDate >= :#{#reportFilter.startDate} and r.submissionDate <= :#{#reportFilter.endDate}) order by date(r.submissionDate) desc, r.submitter.email desc")
-    Page<Report> findAllForHeads(Long userId, ReportFilter reportFilter, List<Long> organizationalDepartmentIds, Pageable pageable, Boolean approvedByMe);
+    Page<ReportFrontHelper> findAllForHeads(Long userId, ReportFilter reportFilter, List<Long> organizationalDepartmentIds, Pageable pageable, Boolean approvedByMe);
+
 
     @Query("select distinct count(r) from Report r left join User u on r.submitter.id=u.id where (:#{#reportFilter.employeeTrackingFormId==null} = true " +
             "or :#{#reportFilter.employeeTrackingFormId} = r.employeeTrackingForm.id) and ((:#{#approvedByMe==null}=true and r.submitter.head.id <> :id) or (:#{#approvedByMe} = true and r.submitter.head.id = :id) or (:#{#approvedByMe} = false and r.submitter.head.id <> :id)) and "+

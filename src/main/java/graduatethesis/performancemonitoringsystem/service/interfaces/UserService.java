@@ -54,9 +54,9 @@ public interface UserService {
 
 //    List<HeadUsersHelper> getAllHeads();
 
-//    List<User> findAllInOrganizationalUnit(Long id);
-//
-//    List<UserOrgDepartmentHelper> getAllHeadForOrganization(Long orgId);
+    List<User> findAllInOrganizationalDepartment(Long id);
+
+//List<UserOrgDepartmentHelper> getAllHeadForOrganization(Long orgId);
 
     void setLoggedUserAsHead(Long id);
 

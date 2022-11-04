@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface OrganizationalDepartmentWorkingItemRepository extends JpaRepository<OrganizationalDepartmentWorkingItem, Long> {
 
     @Query("select odwi from OrganizationalDepartmentWorkingItem odwi where odwi.organizationalDepartment.id=:organizationaDepartmentId and odwi.workingItem.id=:workingItemId")
-    OrganizationalDepartmentWorkingItem findByOrganizationalUnitIdAndAndWorkingItemId(Long organizationaDepartmentId,Long workingItemId);
+    OrganizationalDepartmentWorkingItem findByOrganizationalDepartmentIdAndAndWorkingItemId(Long organizationaDepartmentId,Long workingItemId);
 }

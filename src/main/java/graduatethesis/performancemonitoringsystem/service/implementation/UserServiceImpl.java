@@ -149,6 +149,11 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Override
+    public List<User> findAllInOrganizationalDepartment(Long id) {
+        return this.userRepository.findAllInOrganizationalDepartment(id);
+    }
+
 //    @Override
 //    public List<User> findAllInOrganizationalUnit(Long id) {
 //        return null;
@@ -239,7 +244,7 @@ public class UserServiceImpl implements UserService {
                 return userRole;
             }).collect(Collectors.toList()));
         }
-        personService.createPerson(userHelper.getPerson());
+            personService.createPerson(userHelper.getPerson());
         return user;
     }
 

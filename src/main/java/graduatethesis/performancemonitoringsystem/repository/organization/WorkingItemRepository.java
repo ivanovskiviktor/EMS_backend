@@ -16,5 +16,5 @@ public interface WorkingItemRepository extends JpaRepository<WorkingItem, Long> 
 
     @Query("select distinct wi from WorkingItem wi join OrganizationalDepartmentWorkingItem odwi on wi.id = odwi.workingItem.id where odwi.organizationalDepartment.id = :id " +
             "order by wi.label")
-    List<WorkingItem> findAllByOrganizationalUnit(Long id);
+    List<WorkingItem> findAllByOrganizationalDepartment(Long id);
 }

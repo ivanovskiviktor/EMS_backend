@@ -33,7 +33,7 @@ public interface UserRepository extends JpaRepository<User, Long>{
     void deleteById(Long id);
 
     @Query("select distinct u from User u join OrganizationalDepartmentUser odu on u.id = odu.urUserId.id and odu.organizationalDepartment.id = :id")
-    List<User> findAllInOrganizationalUnit(Long id);
+    List<User> findAllInOrganizationalDepartment(Long id);
 
 
     @Query("select u from User u where u.enabled = true order by u.person.firstName asc")

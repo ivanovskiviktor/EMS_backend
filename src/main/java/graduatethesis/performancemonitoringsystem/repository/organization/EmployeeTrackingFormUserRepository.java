@@ -17,5 +17,5 @@ public interface EmployeeTrackingFormUserRepository extends JpaRepository<Employ
     void deleteByEmployeeTrackingFormAndUser(Long employeeTrackingFormId, Long userId);
 
     @Query("select etfu from EmployeeTrackingFormUser etfu where etfu.employeeTrackingForm.id = :employeeTrackingFormId")
-    EmployeeTrackingFormUser findByTimeTrackingForm(Long employeeTrackingFormId);
+    EmployeeTrackingFormUser findByEmployeeTrackingForm(Long employeeTrackingFormId);
 }
