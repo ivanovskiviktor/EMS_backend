@@ -5,6 +5,7 @@ import graduatethesis.performancemonitoringsystem.model.exceptions.AccessForbidd
 import graduatethesis.performancemonitoringsystem.model.exceptions.UserNotFoundException;
 import graduatethesis.performancemonitoringsystem.model.filters.UserFilter;
 import graduatethesis.performancemonitoringsystem.model.helpers.*;
+import graduatethesis.performancemonitoringsystem.model.organization.OrganizationalDepartment;
 import graduatethesis.performancemonitoringsystem.model.users.*;
 import graduatethesis.performancemonitoringsystem.repository.users.UserRepository;
 import graduatethesis.performancemonitoringsystem.service.interfaces.*;
@@ -145,6 +146,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getAllHeadUsers(String role) {
+        return this.userRepository.getAllByUserRoles(role);
+    }
+
+    @Override
     public User registerUser(UserHelper userHelper) {
         return null;
     }
@@ -153,17 +159,6 @@ public class UserServiceImpl implements UserService {
     public List<User> findAllInOrganizationalDepartment(Long id) {
         return this.userRepository.findAllInOrganizationalDepartment(id);
     }
-
-//    @Override
-//    public List<User> findAllInOrganizationalUnit(Long id) {
-//        return null;
-//    }
-//
-//    @Override
-//    public List<UserOrgDepartmentHelper> getAllHeadForOrganization(Long orgId) {
-//        return null;
-//    }
-
 
     @Override
     public void setLoggedUserAsHead(Long id) {

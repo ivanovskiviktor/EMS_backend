@@ -59,7 +59,7 @@ public interface ReportRepository extends JpaRepository<Report,Long> {
             "(:#{#reportFilter.approverEmail==null}=true or lower(u.email) like %:#{#reportFilter.getApproverEmail()}%)")
     int getAllCustomCount(ReportFilter reportFilter, Boolean approvedByMe, Long id);
 
-    @Query("select distinct count(r) from Report r left join User u on r.submitter.id=u.id join EmployeeTrackingForm etf on r.employeeTrackingForm.id = etf.id join EmployeeTrackingFormUser etfu on etfu.employeeTrackingForm.id = etf.id where etfu.user.id = :id and (:#{#reportFilter.employeeTrackingFormId==null} = true " +
+    @Query("SELECT distinct count(r) from Report r left join User u on r.submitter.id=u.id join EmployeeTrackingForm etf on r.employeeTrackingForm.id = etf.id join EmployeeTrackingFormUser etfu on etfu.employeeTrackingForm.id = etf.id where etfu.user.id = :id and (:#{#reportFilter.employeeTrackingFormId==null} = true " +
             "or :#{#reportFilter.employeeTrackingFormId} = r.employeeTrackingForm.id) and "+
             "(:#{#reportFilter.submitterEmail==null}=true or lower(u.email) like %:#{#reportFilter.getSubmitterEmail()}%) and "+
             "(:#{#reportFilter.description==null}=true or lower(r.description) like %:#{#reportFilter.getDescription()}%) and "+

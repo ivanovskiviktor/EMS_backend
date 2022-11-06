@@ -48,15 +48,11 @@ public interface UserService {
 
     void disableUser(Long id);
 
-//    List<User> getAllHeadUsers(String role);
+    List<User> getAllHeadUsers(String role);
 
     User registerUser(UserHelper userHelper);
 
-//    List<HeadUsersHelper> getAllHeads();
-
     List<User> findAllInOrganizationalDepartment(Long id);
-
-//List<UserOrgDepartmentHelper> getAllHeadForOrganization(Long orgId);
 
     void setLoggedUserAsHead(Long id);
 

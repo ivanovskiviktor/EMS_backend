@@ -1,6 +1,7 @@
 package graduatethesis.performancemonitoringsystem.model.organization;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import graduatethesis.performancemonitoringsystem.model.helpers.OrganizationalDepartmentHelper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -49,5 +50,17 @@ public class OrganizationalDepartment implements Comparable<OrganizationalDepart
             return true;
         return false;
     }
+
+    @JsonIgnore
+    public OrganizationalDepartmentHelper getAsOrganizationalDepartmentHelper(){
+        OrganizationalDepartmentHelper organizationalDepartmentHelper = new OrganizationalDepartmentHelper();
+        organizationalDepartmentHelper.setId(id);
+        organizationalDepartmentHelper.setCode(code);
+        organizationalDepartmentHelper.setLabel(label);
+        organizationalDepartmentHelper.setName(name);
+
+        return organizationalDepartmentHelper;
+    }
+
 
 }

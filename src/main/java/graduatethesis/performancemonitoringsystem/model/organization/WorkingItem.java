@@ -1,6 +1,7 @@
 package graduatethesis.performancemonitoringsystem.model.organization;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import graduatethesis.performancemonitoringsystem.model.helpers.WorkingItemHelper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import javax.persistence.*;
@@ -34,4 +35,17 @@ public class WorkingItem {
         this.name = name;
         this.label = label;
     }
+
+    @JsonIgnore
+    public WorkingItemHelper getAsWorkingItemHelper(){
+        WorkingItemHelper wih = new WorkingItemHelper();
+
+        wih.setId(id);
+        wih.setLabel(label);
+        wih.setName(name);
+        wih.setPresentInEmployeeTrackingForm(false);
+
+        return wih;
+    }
+
 }

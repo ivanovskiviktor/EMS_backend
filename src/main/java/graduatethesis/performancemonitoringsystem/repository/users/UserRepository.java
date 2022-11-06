@@ -50,4 +50,7 @@ public interface UserRepository extends JpaRepository<User, Long>{
     @Query("select u from User u where u.id = :id")
     User findUserById(Long id);
 
+    @Query("select u from User u join UserRole ur on u.id=ur.user.id where ur.role.name = 'ROLE_HEAD_OF_DEPARTMENT'")
+    List<User> findAllHeadUsers();
+
 }

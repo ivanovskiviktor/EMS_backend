@@ -1,19 +1,13 @@
 package graduatethesis.performancemonitoringsystem.service.implementation.organization;
 
-import graduatethesis.performancemonitoringsystem.model.helpers.HeadUserForOrganizationalDepartmentHelper;
-import graduatethesis.performancemonitoringsystem.model.helpers.OrganizationalDepartmentHelper;
-import graduatethesis.performancemonitoringsystem.model.helpers.OrganizationalDepartmentUserCheckHelper;
 import graduatethesis.performancemonitoringsystem.model.helpers.OrganizationalDepartmentUserHelper;
-import graduatethesis.performancemonitoringsystem.model.organization.OrganizationalDepartment;
 import graduatethesis.performancemonitoringsystem.model.organization.OrganizationalDepartmentUser;
 import graduatethesis.performancemonitoringsystem.repository.organization.OrganizationalDepartmentUserRepository;
 import graduatethesis.performancemonitoringsystem.service.interfaces.UserService;
-import graduatethesis.performancemonitoringsystem.service.interfaces.organization.OrganizationalDepartmentService;
 import graduatethesis.performancemonitoringsystem.service.interfaces.organization.OrganizationalDepartmentUserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class OrganizationalDepartmentUserServiceImpl implements OrganizationalDepartmentUserService {
