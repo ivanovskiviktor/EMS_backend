@@ -6,6 +6,7 @@ import graduatethesis.performancemonitoringsystem.model.filters.ReportFilter;
 import graduatethesis.performancemonitoringsystem.model.helpers.ReportFrontHelper;
 import graduatethesis.performancemonitoringsystem.model.helpers.ReportHelper;
 import graduatethesis.performancemonitoringsystem.model.helpers.ReportIdsHelper;
+import graduatethesis.performancemonitoringsystem.model.helpers.TimeSpentOnReportHelper;
 import graduatethesis.performancemonitoringsystem.model.organization.EmployeeTrackingForm;
 import graduatethesis.performancemonitoringsystem.model.organization.Report;
 import graduatethesis.performancemonitoringsystem.model.users.User;
@@ -169,6 +170,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<Report> findAllCustom(ReportFilter reportFilter, Boolean approvedByMe, Long userId, Pageable pageable) {
+        reportFilter.setStartDate(reportFilter.getStartDate().plusDays(1));
         return this.reportRepository.findAllCustom(reportFilter, approvedByMe, userId, pageable).toList();
     }
 
@@ -178,6 +180,7 @@ public class ReportServiceImpl implements ReportService {
         User loggedUser = this.loggedUserService.getLoggedUser();
         String thisUser = user.getEmail();
         String loggedUserEmail = loggedUser.getEmail();
+        reportFilter.setStartDate(reportFilter.getStartDate().plusDays(1));
         if (!thisUser.equals(loggedUserEmail)) {
             throw new DifferentPrivilegeException();
         }else {
@@ -188,18 +191,13 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<Report> findAllCustomForHead(ReportFilter reportFilter, Long id, Pageable pageable, Boolean approvedByMe) {
-        if(reportFilter.getStartDate()==null || reportFilter.getEndDate()==null)
-        {
-            reportFilter.setStartDate(OffsetDateTime.of(1900,1,1,1,1,1,1,ZoneOffset.UTC));
-            reportFilter.setEndDate(OffsetDateTime.of(2200,1,1,1,1,1,1,ZoneOffset.UTC));
-        }
         List<Report> reports = new ArrayList<>();
         List<Long> organizationalDepartmentsForHead = new ArrayList<>();
         User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         User loggedUser = this.loggedUserService.getLoggedUser();
         String thisUser = user.getEmail();
         String loggedUserEmail = loggedUser.getEmail();
-
+        reportFilter.setStartDate(reportFilter.getStartDate().plusDays(1));
         if (!thisUser.equals(loggedUserEmail)) {
             throw new DifferentPrivilegeException();
         }else if(privilegeService.loggedUserHasAnyPrivilege("HEAD_READ_DATA")) {
@@ -279,6 +277,47 @@ public class ReportServiceImpl implements ReportService {
             return this.reportRepository.getAllCustomForHeadNotAcceptedCount(loggedUser.getId(), organizationalUnitsForHead);
         }else{
             return 0;
+        }
+    }
+
+    @Override
+    public TimeSpentOnReportHelper timeSpentOnReportsByUser(ReportFilter reportFilter) {
+        reportFilter.setStartDate(reportFilter.getStartDate().plusDays(1));
+        List<Report> reports = this.reportRepository.getReportsWithNameAndDate(reportFilter);
+        TimeSpentOnReportHelper timeSpentOnReportHelper=new TimeSpentOnReportHelper();
+        int hours=0;
+        int minutes=0;
+        for(Report report:reports){
+            if(report.getHours()!=null) {
+                hours += report.getHours();
+            }
+            if(report.getMinutes()!=null) {
+                minutes += report.getMinutes();
+            }
+        }
+        int hour=minutes/60;
+        minutes%=60;
+        timeSpentOnReportHelper.setHours(hours+hour);
+        timeSpentOnReportHelper.setMinutes(minutes);
+        return timeSpentOnReportHelper;
+
+    }
+
+    @Override
+    public List<Report> getAllNotAcceptedReportsForHead(Long id) {
+        List<Report> reports = new ArrayList<>();
+        User loggedUser = loggedUserService.getLoggedUser();
+        if(loggedUser.getUserRoles().get(0).getRole().getName().equals(UserRoles.ROLE_HEAD_OF_DEPARTMENT)){
+            List<Long> organizationalUnitsForHead = new ArrayList<>();
+            for(int i=0; i<loggedUser.getOrganizationalDepartmentUsers().size(); i++){
+                if(loggedUser.getOrganizationalDepartmentUsers().get(i).getIsHead()){
+                    organizationalUnitsForHead.add(loggedUser.getOrganizationalDepartmentUsers().get(i).getOrganizationalDepartment().getId());
+                }
+            }
+            reports.addAll(this.reportRepository.getAllNotAcceptedReportsForHead(loggedUser.getId(), organizationalUnitsForHead));
+            return reports;
+        }else{
+            return null;
         }
     }
 

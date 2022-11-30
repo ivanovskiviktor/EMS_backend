@@ -3,6 +3,7 @@ package graduatethesis.performancemonitoringsystem.model.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import graduatethesis.performancemonitoringsystem.model.helpers.LoggedUserHelper;
+import graduatethesis.performancemonitoringsystem.model.helpers.UserHelper;
 import graduatethesis.performancemonitoringsystem.model.helpers.UserSearchHelper;
 import graduatethesis.performancemonitoringsystem.model.organization.EmployeeTrackingFormUser;
 import graduatethesis.performancemonitoringsystem.model.organization.Note;
@@ -109,6 +110,20 @@ public class User {
         return userHelper;
     }
 
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof User){
+            User other = (User)o;
+
+            if(other.getId().equals(this.getId())){
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+
     @JsonIgnore
     public UserSearchHelper getAsUserSearchHelper(){
         UserSearchHelper ush = new UserSearchHelper();
@@ -122,5 +137,19 @@ public class User {
         return ush;
     }
 
+    @JsonIgnore
+    public UserHelper getAsUserHelperOriginal() {
+        UserHelper userHelper = new UserHelper();
+        userHelper.setEmail(this.getEmail());
+        userHelper.setId(this.getId());
+        userHelper.setDate_created(this.getDate_created());
+        userHelper.setDate_modified(this.getDate_modified());
+        userHelper.setPerson(this.getPerson());
+        userHelper.setRoles(this.getUserRoles().stream().map(x -> x.getRole().getId()).collect(Collectors.toList()));
+        userHelper.setEnabled(this.isEnabled());
+        userHelper.setPassword(this.getPassword());
+        userHelper.setTokens(this.getTokens());
+        return userHelper;
+    }
 
 }

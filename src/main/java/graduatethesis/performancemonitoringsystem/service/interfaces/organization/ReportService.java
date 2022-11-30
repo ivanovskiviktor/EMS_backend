@@ -3,6 +3,7 @@ package graduatethesis.performancemonitoringsystem.service.interfaces.organizati
 import graduatethesis.performancemonitoringsystem.model.filters.ReportFilter;
 import graduatethesis.performancemonitoringsystem.model.helpers.ReportHelper;
 import graduatethesis.performancemonitoringsystem.model.helpers.ReportIdsHelper;
+import graduatethesis.performancemonitoringsystem.model.helpers.TimeSpentOnReportHelper;
 import graduatethesis.performancemonitoringsystem.model.organization.Report;
 import org.springframework.data.domain.Pageable;
 
@@ -36,4 +37,7 @@ public interface ReportService {
 
     int getAllCustomForHeadNotAcceptedCount(Long userId);
 
+    TimeSpentOnReportHelper timeSpentOnReportsByUser(ReportFilter reportFilter);
+
+    List<Report> getAllNotAcceptedReportsForHead(Long id);
 }

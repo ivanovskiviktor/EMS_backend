@@ -24,7 +24,7 @@ public class EmployeeTrackingFormHelperFront implements Comparable<EmployeeTrack
     private String statusName;
     private Integer value;
     private Long statusId;
-    private Long organizationalDepId;
+    private Long organizationalDepartmentId;
     private Long workingItemId;
     private Boolean hasPreviousReport;
     private Boolean hasReport;

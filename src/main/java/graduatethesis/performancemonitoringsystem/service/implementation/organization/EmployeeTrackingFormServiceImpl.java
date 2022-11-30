@@ -282,10 +282,10 @@ public class EmployeeTrackingFormServiceImpl implements EmployeeTrackingFormServ
         createCell(row, 6, "Статус");
 
         CellStyle style = workbook.createCellStyle();
-        style.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());
+        style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         Font font = workbook.createFont();
-        font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+        font.setColor(HSSFColor.HSSFColorPredefined.AUTOMATIC.getIndex());
         style.setFont(font);
         style.setVerticalAlignment(VerticalAlignment.TOP);
         row.cellIterator().forEachRemaining(cell -> cell.setCellStyle(style));
@@ -324,7 +324,6 @@ public class EmployeeTrackingFormServiceImpl implements EmployeeTrackingFormServ
             int columnCount = 0;
             if(employeeTrackingForm.getOrganizationalDepartmentWorkingItem()!=null &&employeeTrackingForm.getOrganizationalDepartmentWorkingItem().getWorkingItem()!=null){
                     createCell(row, columnCount++, employeeTrackingForm.getOrganizationalDepartmentWorkingItem().getWorkingItem().getName());
-                    createCell(row, columnCount++, "");
                     createCell(row, columnCount++, employeeTrackingForm.getTitle());
                     createCell(row, columnCount++, employeeTrackingForm.getDescription());
                     createCell(row, columnCount++, employeeTrackingForm.getUser().getPerson().getFirstName() +" "+employeeTrackingForm.getUser().getPerson().getLastName());

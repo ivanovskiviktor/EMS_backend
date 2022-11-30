@@ -53,4 +53,10 @@ public interface UserRepository extends JpaRepository<User, Long>{
     @Query("select u from User u join UserRole ur on u.id=ur.user.id where ur.role.name = 'ROLE_HEAD_OF_DEPARTMENT'")
     List<User> findAllHeadUsers();
 
+    @Query("select u from User u where u.head.id=:userId")
+    List<User> findAllUsersApprovedByLoggedHead(Long userId);
+
+    @Query("select u from User u join OrganizationalDepartmentUser odr on u.id=odr.urUserId.id where u.head.id <>:userId and odr.isHead=false and odr.organizationalDepartment.id=:organizationalDepartmentId")
+    List<User> findAllUserWithSameOrganizationalDepartmentAndNotApprovedByHead(Long userId,Long organizationalDepartmentId);
+
 }

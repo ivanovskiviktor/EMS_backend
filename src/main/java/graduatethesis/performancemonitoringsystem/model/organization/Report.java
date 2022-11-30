@@ -50,6 +50,16 @@ public class Report implements Comparable<Report> {
     private User submitter;
 
     @JsonIgnore
+    public String getApproverFullName(){
+        if(approver == null){
+            return "";
+        }else{
+            return this.approver.getPerson().getFirstName().toLowerCase() + " " + this.approver.getPerson().getLastName().toLowerCase();
+        }
+    }
+
+
+    @JsonIgnore
     public ReportHelper getAsReportHelper(User user){
         ReportHelper reportHelper = new ReportHelper();
 
@@ -72,9 +82,11 @@ public class Report implements Comparable<Report> {
         reportHelper.setId(id);
         if(approver!=null){
             reportHelper.setApprover(approver.getEmail());
+            reportHelper.setApproverFirstNameLastName(approver.getPerson().getFirstName() + " " + approver.getPerson().getLastName());
         }
         if(submitter!=null){
             reportHelper.setSubmitter(submitter.getEmail());
+            reportHelper.setSubmitterFirstNameLastName(submitter.getPerson().getFirstName() + " " + submitter.getPerson().getLastName());
         }
         reportHelper.setSubmissionDate(submissionDate);
         reportHelper.setTaskDescription(employeeTrackingForm.getDescription());

@@ -3,6 +3,7 @@ package graduatethesis.performancemonitoringsystem.controller.organization;
 import graduatethesis.performancemonitoringsystem.model.filters.ReportFilter;
 import graduatethesis.performancemonitoringsystem.model.helpers.ReportHelper;
 import graduatethesis.performancemonitoringsystem.model.helpers.ReportIdsHelper;
+import graduatethesis.performancemonitoringsystem.model.helpers.TimeSpentOnReportHelper;
 import graduatethesis.performancemonitoringsystem.model.organization.Report;
 import graduatethesis.performancemonitoringsystem.model.users.User;
 import graduatethesis.performancemonitoringsystem.repository.users.UserRepository;
@@ -54,7 +55,7 @@ public class ReportController {
         User user = this.loggedUserService.getLoggedUser();
         int count = 0;
         if(privilegeService.loggedUserHasAnyPrivilege("ACCESS_ALL")){
-            reports = this.reportService.findAllCustom(reportFilter, approvedByMe, user.getId(), PageRequest.of(page,size)).stream().map(r->r.getAsReportHelper(user)).collect(Collectors.toList());
+                reports = this.reportService.findAllCustom(reportFilter, approvedByMe, user.getId(), PageRequest.of(page,size)).stream().map(r->r.getAsReportHelper(user)).collect(Collectors.toList());
             count = this.reportService.getAllCustomCount(reportFilter, approvedByMe, user.getId());
         }
         else if(privilegeService.loggedUserHasAnyPrivilege("READ_USER_DATA")) {
@@ -67,11 +68,12 @@ public class ReportController {
         }
 
         if(reportFilter.getStartDate() != null && reportFilter.getEndDate() != null){
-            reports.removeIf(r->r.getSubmissionDate().isAfter(reportFilter.getEndDate()) || r.getSubmissionDate().isBefore(reportFilter.getStartDate()));
+            reports.removeIf(r->r.getSubmissionDate().isAfter(reportFilter.getEndDate()) || r.getSubmissionDate().toLocalDate().isBefore(reportFilter.getStartDate()));
         }
 
 
-            return new PageImpl<>(reports, PageRequest.of(page, size), count);
+
+        return new PageImpl<>(reports, PageRequest.of(page, size), count);
 
     }
 
@@ -95,7 +97,7 @@ public class ReportController {
         this.reportService.acceptReport(reportIdsHelper);
     }
 
-    @PreAuthorize("@privilegeServiceImpl.loggedUserHasAnyPrivilege('ACCESS_ALL','HEAD_READ_DATA','READ_USER_DATA', 'SECTOR_HEAD_READ_DATA', 'READ_ALL_DATA')")
+    @PreAuthorize("@privilegeServiceImpl.loggedUserHasAnyPrivilege('ACCESS_ALL','HEAD_READ_DATA','READ_USER_DATA')")
     @GetMapping("/getNumberOfNotApprovedReportsForUser")
     public int getNumberOfNotApprovedReportsForUser()
     {
@@ -103,5 +105,24 @@ public class ReportController {
         return this.reportService.getAllCustomForHeadNotAcceptedCount(user.getId());
 
     }
+
+    @PreAuthorize("@privilegeServiceImpl.loggedUserHasAnyPrivilege('ACCESS_ALL','HEAD_READ_DATA','READ_USER_DATA')")
+    @PostMapping(value = "/timeSpentOnReportsByUser")
+    public TimeSpentOnReportHelper timeSpentOnReportsByUser(@RequestBody ReportFilter reportFilter){
+        return this.reportService.timeSpentOnReportsByUser(reportFilter);
+    }
+
+    @PreAuthorize("@privilegeServiceImpl.loggedUserHasAnyPrivilege('ACCESS_ALL','HEAD_READ_DATA','READ_USER_DATA')")
+    @GetMapping("/getNotApprovedReportsForLoggedUser")
+    public List<ReportHelper> getNotApprovedReportsForLoggedUser()
+    {
+        List<ReportHelper> reportList = new ArrayList<>();
+
+        User user = this.loggedUserService.getLoggedUser();
+
+        reportList = this.reportService.getAllNotAcceptedReportsForHead(user.getId()).stream().map(r->r.getAsReportHelper(user)).collect(Collectors.toList());
+        return reportList;
+    }
+
 
 }

@@ -58,7 +58,7 @@ public interface EmployeeTrackingFormRepository extends JpaRepository<EmployeeTr
             "(:#{#employeeTrackingFormFilter.getDescription() == null} = true or lower(etf.description) like %:#{#employeeTrackingFormFilter.getDescription()}%) and" +
             "(:#{#employeeTrackingFormFilter.getTitle() == null} = true or lower(etf.title) like %:#{#employeeTrackingFormFilter.getTitle()}%) and" +
             "(:#{#employeeTrackingFormFilter.valueId} is null or :#{#employeeTrackingFormFilter.valueId} = etf.value) and" +
-            "(:#{#employeeTrackingFormFilter.organizationalDepartmentId} is null or :#{#employeeTrackingFormFilter.organizationalUnitId} = etf.organizationalDepartmentWorkingItem.organizationalDepartment.id) and" +
+            "(:#{#employeeTrackingFormFilter.organizationalDepartmentId} is null or :#{#employeeTrackingFormFilter.organizationalDepartmentId} = etf.organizationalDepartmentWorkingItem.organizationalDepartment.id) and" +
             "(:#{#employeeTrackingFormFilter.statusId} is null or :#{#employeeTrackingFormFilter.statusId} = etf.status.id) order by etf.dateModified")
     List<EmployeeTrackingForm> findAllByOrganizationalDepartmentId(@Param("employeeTrackingFormFilter") EmployeeTrackingFormFilter employeeTrackingFormFilter, Long id);
 
@@ -78,10 +78,9 @@ public interface EmployeeTrackingFormRepository extends JpaRepository<EmployeeTr
     List<EmployeeTrackingForm> findAllWhichAreNotInHeadOrganizationalDepartment(Long userId, List<Long> organizationalDepartmentIds);
 
     @Query("SELECT distinct etf from EmployeeTrackingForm etf join User u on etf.user.id= u.id where (:#{#employeeTrackingFormFilter.workingItemId} is null or :#{#employeeTrackingFormFilter.workingItemId} = etf.organizationalDepartmentWorkingItem.workingItem.id) and" +
-            "(:#{#employeeTrackingFormFilter.getFirstName() == null} = true or lower(u.person.firstName) like %:#{#employeeTrackingFormFilter.getFirstName()}%) and" +
-            "(:#{#employeeTrackingFormFilter.getLastName() == null} = true or lower(u.person.lastName) like %:#{#employeeTrackingFormFilter.getLastName()}%) and" +
-            "(:#{#employeeTrackingFormFilter.startDate == null} = true or :#{#employeeTrackingFormFilter.startDate} = etf.taskStartDate) and" +
-            "(:#{#employeeTrackingFormFilter.endDate == null} = true or :#{#employeeTrackingFormFilter.endDate} = etf.taskEndDate) and" +
+            "(:#{#employeeTrackingFormFilter.submitterFirstNameLastName==null}=true or lower(concat(concat(u.person.firstName,' '),u.person.lastName)) like %:#{#employeeTrackingFormFilter.getsubmitterFirstNameLastNameToLower()}%) and" +
+             "(:#{#employeeTrackingFormFilter.startDate == null} = true or :#{#employeeTrackingFormFilter.startDate} = etf.taskStartDate) and" +
+            //"(:#{#employeeTrackingFormFilter.startDate == null} = true or CAST(etf.taskStartDate as LocalDate) = :#{#employeeTrackingFormFilter.startDate}) and" +
             "(:#{#employeeTrackingFormFilter.getDescription() == null} = true or lower(etf.description) like %:#{#employeeTrackingFormFilter.getDescription()}%) and" +
             "(:#{#employeeTrackingFormFilter.getTitle() == null} = true or lower(etf.title) like %:#{#employeeTrackingFormFilter.getTitle()}%) and" +
             "(:#{#employeeTrackingFormFilter.valueId} is null or :#{#employeeTrackingFormFilter.valueId} = etf.value) and" +
@@ -91,8 +90,7 @@ public interface EmployeeTrackingFormRepository extends JpaRepository<EmployeeTr
     Page<EmployeeTrackingForm> findAllCustomPaginated(String status, @Param("employeeTrackingFormFilter") EmployeeTrackingFormFilter employeeTrackingFormFilter, Pageable pageable);
 
     @Query("select etf from EmployeeTrackingForm etf join EmployeeTrackingFormUser etfu on etf.id = etfu.employeeTrackingForm.id where etfu.user.id =:id and (:#{#employeeTrackingFormFilter.workingItemId} is null or :#{#employeeTrackingFormFilter.workingItemId} = etf.organizationalDepartmentWorkingItem.workingItem.id) and" +
-            "(:#{#employeeTrackingFormFilter.getFirstName() == null} = true or lower(etf.user.person.firstName) like %:#{#employeeTrackingFormFilter.getFirstName()}%) and" +
-            "(:#{#employeeTrackingFormFilter.getLastName() == null} = true or lower(etf.user.person.lastName) like %:#{#employeeTrackingFormFilter.getLastName()}%) and" +
+            "(:#{#employeeTrackingFormFilter.submitterFirstNameLastName==null}=true or lower(concat(concat(etf.user.person.firstName,' '),etf.user.person.lastName)) like %:#{#employeeTrackingFormFilter.getsubmitterFirstNameLastNameToLower()}%) and" +
             "(:#{#employeeTrackingFormFilter.startDate == null} = true or :#{#employeeTrackingFormFilter.startDate} = etf.taskStartDate) and" +
             "(:#{#employeeTrackingFormFilter.endDate == null} = true or :#{#employeeTrackingFormFilter.endDate} = etf.taskEndDate) and" +
             "(:#{#employeeTrackingFormFilter.getDescription() == null} = true or lower(etf.description) like %:#{#employeeTrackingFormFilter.getDescription()}%) and" +
@@ -100,14 +98,13 @@ public interface EmployeeTrackingFormRepository extends JpaRepository<EmployeeTr
             "(:#{#employeeTrackingFormFilter.valueId} is null or :#{#employeeTrackingFormFilter.valueId} = etf.value) and" +
             "(:#{#employeeTrackingFormFilter.organizationalDepartmentId} is null or :#{#employeeTrackingFormFilter.organizationalDepartmentId} = etf.organizationalDepartmentWorkingItem.organizationalDepartment.id) and"+
             "(etf.status.name = :status) and " +
-            "(:#{#employeeTrackingFormFilter.statusId} is null or :#{#timeTrackingFormFilter.statusId} = etf.status.id) order by etf.dateModified desc")
+            "(:#{#employeeTrackingFormFilter.statusId} is null or :#{#employeeTrackingFormFilter.statusId} = etf.status.id) order by etf.dateModified desc")
     Page<EmployeeTrackingForm> findAllByUserPaginated(String status, @Param("employeeTrackingFormFilter") EmployeeTrackingFormFilter employeeTrackingFormFilter, Long id, Pageable pageable);
 
     @Query("select distinct etf from EmployeeTrackingForm etf left join OrganizationalDepartmentWorkingItem odwi on etf.organizationalDepartmentWorkingItem.id = odwi.id " +
             "left join EmployeeTrackingFormUser etfu on etf.id = etfu.employeeTrackingForm.id where (odwi.organizationalDepartment.id in :organizationalDepartmentIds or etf.user.id = :userId or etfu.user.id = :userId) and " +
             "(:#{#employeeTrackingFormFilter.workingItemId} is null or :#{#employeeTrackingFormFilter.workingItemId} = etf.organizationalDepartmentWorkingItem.workingItem.id) and" +
-            "(:#{#employeeTrackingFormFilter.getFirstName() == null} = true or lower(etf.user.person.firstName) like %:#{#employeeTrackingFormFilter.getFirstName()}%) and" +
-            "(:#{#employeeTrackingFormFilter.getLastName() == null} = true or lower(etf.user.person.lastName) like %:#{#employeeTrackingFormFilter.getLastName()}%) and" +
+            "(:#{#employeeTrackingFormFilter.submitterFirstNameLastName==null}=true or lower(concat(concat(etf.user.person.firstName,' '),etf.user.person.lastName)) like %:#{#employeeTrackingFormFilter.getsubmitterFirstNameLastNameToLower()}%) and" +
             "(:#{#employeeTrackingFormFilter.startDate == null} = true or :#{#employeeTrackingFormFilter.startDate} = etf.taskStartDate) and" +
             "(:#{#employeeTrackingFormFilter.endDate == null} = true or :#{#employeeTrackingFormFilter.endDate} = etf.taskEndDate) and" +
             "(:#{#employeeTrackingFormFilter.getDescription() == null} = true or lower(etf.description) like %:#{#employeeTrackingFormFilter.getDescription()}%) and" +

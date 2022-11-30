@@ -31,7 +31,15 @@ public class EmployeeTrackingFormFilter {
 
     String title;
 
+    String submitterFirstNameLastName;
 
+
+    public String getsubmitterFirstNameLastNameToLower(){
+        if(this.submitterFirstNameLastName!=null){
+            return this.submitterFirstNameLastName.toLowerCase();
+        }
+        return null;
+    }
 
     public String getFirstName() {
         if(firstName!=null){

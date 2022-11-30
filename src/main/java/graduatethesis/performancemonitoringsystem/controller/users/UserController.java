@@ -13,6 +13,7 @@ import graduatethesis.performancemonitoringsystem.model.users.User;
 import graduatethesis.performancemonitoringsystem.repository.users.UserRepository;
 import graduatethesis.performancemonitoringsystem.service.interfaces.*;
 import graduatethesis.performancemonitoringsystem.service.interfaces.organization.OrganizationalDepartmentService;
+import graduatethesis.performancemonitoringsystem.service.interfaces.organization.OrganizationalDepartmentUserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -39,16 +40,18 @@ public class UserController {
     private final TokenService tokenService;
     private final PersonService personService;
     private final OrganizationalDepartmentService organizationalDepartmentService;
+    private final OrganizationalDepartmentUserService organizationalDepartmentUserService;
     private final UserRoleService userRoleService;
 
 
-    public UserController(UserService userService, UserRepository userRepository, LoggedUserService loggedUserService, TokenService tokenService, PersonService personService, OrganizationalDepartmentService organizationalDepartmentService, UserRoleService userRoleService) {
+    public UserController(UserService userService, UserRepository userRepository, LoggedUserService loggedUserService, TokenService tokenService, PersonService personService, OrganizationalDepartmentService organizationalDepartmentService, OrganizationalDepartmentUserService organizationalDepartmentUserService, UserRoleService userRoleService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.loggedUserService = loggedUserService;
         this.tokenService = tokenService;
         this.personService = personService;
         this.organizationalDepartmentService = organizationalDepartmentService;
+        this.organizationalDepartmentUserService = organizationalDepartmentUserService;
         this.userRoleService = userRoleService;
     }
 
@@ -263,6 +266,27 @@ public class UserController {
     public UserHeadHelperFront findById(@PathVariable Long id){
         return this.userService.findUserById(id);
     }
+
+    @PreAuthorize("@privilegeServiceImpl.loggedUserHasAnyPrivilege('HEAD_READ_DATA')")
+    @GetMapping("/getAllApprovedUsersByLoggedHeadUser")
+    public List<UserHelper> getAllApprovedByLoggedUser(){
+        return this.userService.getAllApprovedByLoggedUser();
+    }
+
+    @PreAuthorize("@privilegeServiceImpl.loggedUserHasAnyPrivilege('ACCESS_ALL','HEAD_READ_DATA','READ_USER_DATA')")
+    @GetMapping("/findAllUsersWithSameOrganizationalUnitAndNotApprovedByHead")
+    public List<UserHelper> findAllUsersWithSameOrganizationalUnitAndNotApprovedByHead(){
+        User loggedHead=this.loggedUserService.getLoggedUser();
+        List<User> users=new ArrayList<>();
+
+        List<OrganizationalDepartmentUser> organizationalDepartmentUsers =this.organizationalDepartmentUserService.findAllWhereUserIsHead(loggedHead.getId());
+        for(OrganizationalDepartmentUser organizationalDepartmentUser:organizationalDepartmentUsers){
+            users.addAll(this.userRepository.findAllUserWithSameOrganizationalDepartmentAndNotApprovedByHead(loggedHead.getId(),organizationalDepartmentUser.getOrganizationalDepartment().getId()));
+        }
+        users.add(loggedHead);
+        return users.stream().map(User::getAsUserHelperOriginal).collect(Collectors.toList());
+    }
+
 
 
 }

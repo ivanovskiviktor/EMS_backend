@@ -64,4 +64,7 @@ public interface UserService {
 
     void removeHeadUserFromUser(HeadUserHelper headUserHelper);
 
+    List<UserHelper> getAllApprovedByLoggedUser();
+
+
 }

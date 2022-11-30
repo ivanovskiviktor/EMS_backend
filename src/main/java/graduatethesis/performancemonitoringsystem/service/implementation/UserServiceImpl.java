@@ -2,6 +2,7 @@ package graduatethesis.performancemonitoringsystem.service.implementation;
 
 import graduatethesis.performancemonitoringsystem.constants.UserRoles;
 import graduatethesis.performancemonitoringsystem.model.exceptions.AccessForbiddenException;
+import graduatethesis.performancemonitoringsystem.model.exceptions.NoUsersWereFoundException;
 import graduatethesis.performancemonitoringsystem.model.exceptions.UserNotFoundException;
 import graduatethesis.performancemonitoringsystem.model.filters.UserFilter;
 import graduatethesis.performancemonitoringsystem.model.helpers.*;
@@ -211,6 +212,16 @@ public class UserServiceImpl implements UserService {
         User user = this.userRepository.findById(headUserHelper.getId()).orElseThrow();
         user.setHead(null);
         this.userRepository.save(user);
+    }
+
+    @Override
+    public List<UserHelper> getAllApprovedByLoggedUser() {
+        User user=this.loggedUserService.getLoggedUser();
+        List<User> approvedUsers=this.userRepository.findAllUsersApprovedByLoggedHead(user.getId());
+        if(!approvedUsers.isEmpty()) {
+            return approvedUsers.stream().map(User::getAsUserHelperOriginal).collect(Collectors.toList());
+        }
+        else throw new NoUsersWereFoundException();
     }
 
 

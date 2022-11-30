@@ -39,6 +39,10 @@ public class ReportHelper {
 
     String submitter;
 
+    String approverFirstNameLastName;
+
+    String submitterFirstNameLastName;
+
     Boolean approveByMe;
 
 }

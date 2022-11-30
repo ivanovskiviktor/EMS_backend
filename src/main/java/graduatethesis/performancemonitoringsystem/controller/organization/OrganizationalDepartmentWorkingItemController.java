@@ -23,6 +23,6 @@ public class OrganizationalDepartmentWorkingItemController {
     @PostMapping(value="/create")
     public List<OrganizationalDepartmentWorkingItem> save(@RequestBody OrganizationalDepartmentWorkingItemHelper organizationalDepartmentWorkingItemHelper){
         return this.organizationalDepartmentWorkingItemService.create(organizationalDepartmentWorkingItemHelper);
-    }
+    }   
 
 }

@@ -103,7 +103,7 @@ public class EmployeeTrackingForm implements Comparable<EmployeeTrackingForm> {
         employeeTrackingFormHelperFront.setNameSurnames(nameSurnames);
         employeeTrackingFormHelperFront.setValue(this.value);
         employeeTrackingFormHelperFront.setWorkingItemId(this.organizationalDepartmentWorkingItem.getWorkingItem().getId());
-        employeeTrackingFormHelperFront.setOrganizationalDepId(this.organizationalDepartmentWorkingItem.getOrganizationalDepartment().getId());
+        employeeTrackingFormHelperFront.setOrganizationalDepartmentId(this.organizationalDepartmentWorkingItem.getOrganizationalDepartment().getId());
         employeeTrackingFormHelperFront.setTitle(this.title);
         employeeTrackingFormHelperFront.setIsAssignedToMe(false);
         for(int i=0; i<timeTrackingFormUsers.size(); i++){
