@@ -55,8 +55,8 @@ public class ReportController {
         User user = this.loggedUserService.getLoggedUser();
         int count = 0;
         if(privilegeService.loggedUserHasAnyPrivilege("ACCESS_ALL")){
-                reports = this.reportService.findAllCustom(reportFilter, approvedByMe, user.getId(), PageRequest.of(page,size)).stream().map(r->r.getAsReportHelper(user)).collect(Collectors.toList());
-            count = this.reportService.getAllCustomCount(reportFilter, approvedByMe, user.getId());
+            reports = this.reportService.findAllCustom(reportFilter, user.getId(), PageRequest.of(page,size)).stream().map(r->r.getAsReportHelper(user)).collect(Collectors.toList());
+            count = this.reportService.getAllCustomCount(reportFilter, user.getId());
         }
         else if(privilegeService.loggedUserHasAnyPrivilege("READ_USER_DATA")) {
             reports = this.reportService.findAllCustomForUser(reportFilter, user.getId(), PageRequest.of(page,size)).stream().map(r->r.getAsReportHelper(user)).collect(Collectors.toList());

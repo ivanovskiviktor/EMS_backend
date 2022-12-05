@@ -41,12 +41,6 @@ public interface EmployeeTrackingFormService {
 
     Optional<EmployeeTrackingForm> findById(Long id);
 
-    List<ReportTotalTasksHelper> findAllOrderedByOrganizationalDepartment();
-
-    List<ReportTotalTasksByEmployeeHelper> findAllOrderedByEmployee();
-
-    List<ReportTasksByTimeHelper> findAllByTime(DateHelper dateHelper);
-
     void closeTask(Long id);
 
     List<EmployeeTrackingForm> findAllByOrganizationalDepartmentId(Long id);

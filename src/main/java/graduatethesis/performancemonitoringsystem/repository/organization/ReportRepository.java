@@ -22,14 +22,14 @@ public interface ReportRepository extends JpaRepository<Report,Long> {
     List<Report> findAllByEmployeeTrackingForm(Long id);
 
     @Query("SELECT r from Report r left join r.approver approver left join approver.person person where (:#{#reportFilter.employeeTrackingFormId==null} = true " +
-            "or :#{#reportFilter.employeeTrackingFormId} = r.employeeTrackingForm.id) and ((:#{#approvedByMe==null}=true and r.submitter.head.id <> :id) or (:#{#approvedByMe} = true and r.submitter.head.id = :id) or (:#{#approvedByMe} = false and r.submitter.head.id <> :id)) and "+
+            "or :#{#reportFilter.employeeTrackingFormId} = r.employeeTrackingForm.id) and (r.submitter.head.id <> :id or r.submitter.head.id = :id or r.submitter.head.id <> :id) and "+
             "(:#{#reportFilter.submitterEmail==null}=true or lower(r.submitter.email) like %:#{#reportFilter.submitterEmail}%) and "+
             "(:#{#reportFilter.submitterFirstNameLastName==null}=true or lower(concat(concat(r.submitter.person.firstName,' '),r.submitter.person.lastName)) like %:#{#reportFilter.getsubmitterFirstNameLastNameToLower()}%) and " +
             "(:#{#reportFilter.getapproverFirstNameLastNameToLower()==null}=true or lower(concat(concat(person.firstName,' '),person.lastName)) like %:#{#reportFilter.getapproverFirstNameLastNameToLower()}%) and " +
             "(:#{#reportFilter.description==null}=true or lower(r.description) like %:#{#reportFilter.getDescriptionToLower()}%) and "+
             "(:#{#reportFilter.startDate==null}=true or CAST(r.submissionDate as LocalDate) = :#{#reportFilter.startDate}) and " +
             "(:#{#reportFilter.approverEmail==null}=true or lower(approver.email) like %:#{#reportFilter.approverEmail}%) order by date(r.submissionDate) desc, r.submitter.email desc")
-    Page<Report> findAllCustom(@Param("reportFilter") ReportFilter reportFilter, Boolean approvedByMe, Long id, Pageable pageable);
+    Page<Report> findAllCustom(@Param("reportFilter") ReportFilter reportFilter, Long id, Pageable pageable);
 
     @Query("SELECT r from Report r left join r.approver approver left join approver.person person join EmployeeTrackingForm etf on r.employeeTrackingForm.id = etf.id join EmployeeTrackingFormUser etfu on etfu.employeeTrackingForm.id = etf.id where etfu.user.id = :id and (:#{#reportFilter.employeeTrackingFormId==null} = true " +
             "or :#{#reportFilter.employeeTrackingFormId} = r.employeeTrackingForm.id) and "+
@@ -57,12 +57,12 @@ public interface ReportRepository extends JpaRepository<Report,Long> {
 
 
     @Query("SELECT distinct count(r) from Report r left join User u on r.submitter.id=u.id where (:#{#reportFilter.employeeTrackingFormId==null} = true " +
-            "or :#{#reportFilter.employeeTrackingFormId} = r.employeeTrackingForm.id) and ((:#{#approvedByMe==null}=true and r.submitter.head.id <> :id) or (:#{#approvedByMe} = true and r.submitter.head.id = :id) or (:#{#approvedByMe} = false and r.submitter.head.id <> :id)) and "+
+            "or :#{#reportFilter.employeeTrackingFormId} = r.employeeTrackingForm.id) and (r.submitter.head.id <> :id or r.submitter.head.id = :id or r.submitter.head.id <> :id) and "+
             "(:#{#reportFilter.submitterEmail==null}=true or lower(u.email) like %:#{#reportFilter.getSubmitterEmail()}%) and "+
             "(:#{#reportFilter.description==null}=true or lower(r.description) like %:#{#reportFilter.getDescription()}%) and "+
             "(CAST(r.submissionDate as LocalDate) = :#{#reportFilter.startDate}) and "+
             "(:#{#reportFilter.approverEmail==null}=true or lower(u.email) like %:#{#reportFilter.getApproverEmail()}%)")
-    int getAllCustomCount(ReportFilter reportFilter, Boolean approvedByMe, Long id);
+    int getAllCustomCount(ReportFilter reportFilter, Long id);
 
     @Query("SELECT distinct count(r) from Report r left join User u on r.submitter.id=u.id join EmployeeTrackingForm etf on r.employeeTrackingForm.id = etf.id join EmployeeTrackingFormUser etfu on etfu.employeeTrackingForm.id = etf.id where etfu.user.id = :id and (:#{#reportFilter.employeeTrackingFormId==null} = true " +
             "or :#{#reportFilter.employeeTrackingFormId} = r.employeeTrackingForm.id) and "+

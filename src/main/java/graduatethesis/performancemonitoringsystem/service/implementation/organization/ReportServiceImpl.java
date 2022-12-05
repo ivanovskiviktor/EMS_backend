@@ -169,9 +169,9 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public List<Report> findAllCustom(ReportFilter reportFilter, Boolean approvedByMe, Long userId, Pageable pageable) {
+    public List<Report> findAllCustom(ReportFilter reportFilter, Long userId, Pageable pageable) {
         reportFilter.setStartDate(reportFilter.getStartDate().plusDays(1));
-        return this.reportRepository.findAllCustom(reportFilter, approvedByMe, userId, pageable).toList();
+        return this.reportRepository.findAllCustom(reportFilter, userId, pageable).toList();
     }
 
     @Override
@@ -242,8 +242,8 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public int getAllCustomCount(ReportFilter reportFilter, Boolean approvedByMe, Long userId) {
-        return this.reportRepository.getAllCustomCount(reportFilter, approvedByMe, userId);
+    public int getAllCustomCount(ReportFilter reportFilter, Long userId) {
+        return this.reportRepository.getAllCustomCount(reportFilter, userId);
     }
 
     @Override

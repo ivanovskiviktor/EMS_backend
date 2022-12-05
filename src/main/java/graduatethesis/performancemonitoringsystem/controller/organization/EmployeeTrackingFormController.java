@@ -115,63 +115,6 @@ public class EmployeeTrackingFormController {
                 .body(content);
     }
 
-    @PreAuthorize("@privilegeServiceImpl.loggedUserHasAnyPrivilege('ACCESS_ALL')")
-    @GetMapping(value = "/getOrderedByOrganizationalDepartment/{page}/{size}")
-    public Page<ReportTotalTasksHelper> findAllOrderedByOrganizationalDepartment(@PathVariable int page, @PathVariable int size){
-        List<ReportTotalTasksHelper> list = this.employeeTrackingFormService.findAllOrderedByOrganizationalDepartment();
-
-        Pageable pageable = PageRequest.of(page, size);
-        int startIdx = Math.min((int) pageable.getOffset(), list.size());
-        int endIdx = Math.min(startIdx + pageable.getPageSize(), list.size());
-        return new PageImpl<>(list.subList(startIdx, endIdx), pageable, list.size());
-    }
-
-    @PreAuthorize("@privilegeServiceImpl.loggedUserHasAnyPrivilege('ACCESS_ALL')")
-    @GetMapping(value = "/getReportByEmployee/{page}/{size}")
-    public Page<ReportTotalTasksByEmployeeHelper> findAllOrderedByEmployee(@PathVariable int page, @PathVariable int size){
-        List<ReportTotalTasksByEmployeeHelper> list =  this.employeeTrackingFormService.findAllOrderedByEmployee();
-
-        Pageable pageable = PageRequest.of(page, size);
-        int startIdx = Math.min((int) pageable.getOffset(), list.size());
-        int endIdx = Math.min(startIdx + pageable.getPageSize(), list.size());
-        return new PageImpl<>(list.subList(startIdx, endIdx), pageable, list.size());
-    }
-
-    @PreAuthorize("@privilegeServiceImpl.loggedUserHasAnyPrivilege('ACCESS_ALL')")
-    @PostMapping(value = "/getAllByTime/{page}/{size}")
-    public Page<ReportTasksByTimeHelper> findAllByTime(@RequestBody DateHelper dateHelper, @PathVariable int page, @PathVariable int size){
-        List<ReportTasksByTimeHelper> list = this.employeeTrackingFormService.findAllByTime(dateHelper);
-
-        Pageable pageable = PageRequest.of(page, size);
-        int startIdx = Math.min((int) pageable.getOffset(), list.size());
-        int endIdx = Math.min(startIdx + pageable.getPageSize(), list.size());
-        return new PageImpl<>(list.subList(startIdx, endIdx), pageable, list.size());
-    }
-
-    @PreAuthorize("@privilegeServiceImpl.loggedUserHasAnyPrivilege('ACCESS_ALL')")
-    @PostMapping(value = "/getAllByTime")
-    public List<ReportTasksByTimeHelper> findAllByTime(@RequestBody DateHelper dateHelper){
-        List<ReportTasksByTimeHelper> list = this.employeeTrackingFormService.findAllByTime(dateHelper);
-
-        return list;
-    }
-
-    @PreAuthorize("@privilegeServiceImpl.loggedUserHasAnyPrivilege('ACCESS_ALL')")
-    @GetMapping(value = "/getReportByEmployee")
-    public List<ReportTotalTasksByEmployeeHelper> findAllOrderedByEmployee(){
-        List<ReportTotalTasksByEmployeeHelper> list =  this.employeeTrackingFormService.findAllOrderedByEmployee();
-
-        return list;
-    }
-
-    @PreAuthorize("@privilegeServiceImpl.loggedUserHasAnyPrivilege('ACCESS_ALL')")
-    @GetMapping(value = "/getOrderedByOrganizationalDepartment")
-    public List<ReportTotalTasksHelper> findAllOrderedByOrganizationalDepartment(){
-        List<ReportTotalTasksHelper> list = this.employeeTrackingFormService.findAllOrderedByOrganizationalDepartment();
-
-        return list;
-    }
-
     @PreAuthorize("@privilegeServiceImpl.loggedUserHasAnyPrivilege('ACCESS_ALL','HEAD_READ_DATA','READ_USER_DATA')")
     @GetMapping(value = "/closeTask/{id}")
     public void closeTask(@PathVariable Long id) throws MessagingException {

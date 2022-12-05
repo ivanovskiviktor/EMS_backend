@@ -1,7 +1,6 @@
 package graduatethesis.performancemonitoringsystem.repository.organization;
 
 import graduatethesis.performancemonitoringsystem.model.filters.EmployeeTrackingFormFilter;
-import graduatethesis.performancemonitoringsystem.model.helpers.DateHelper;
 import graduatethesis.performancemonitoringsystem.model.organization.EmployeeTrackingForm;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -39,16 +38,6 @@ public interface EmployeeTrackingFormRepository extends JpaRepository<EmployeeTr
             "(:#{#employeeTrackingFormFilter.organizationalDepartmentId} is null or :#{#employeeTrackingFormFilter.organizationalDepartmentId} = etf.organizationalDepartmentWorkingItem.organizationalDepartment.id) and" +
             "(:#{#employeeTrackingFormFilter.statusId} is null or :#{#employeeTrackingFormFilter.statusId} = etf.status.id) order by etf.dateModified")
     List<EmployeeTrackingForm> findAllByUser(@Param("employeeTrackingFormFilter") EmployeeTrackingFormFilter employeeTrackingFormFilter, Long id);
-
-    @Query("select etf from EmployeeTrackingForm etf order by etf.organizationalDepartmentWorkingItem.workingItem.name, etf.status.name, etf.organizationalDepartmentWorkingItem.organizationalDepartment.name")
-    List<EmployeeTrackingForm> findAllOrderedByOrganizationalDepartment();
-
-    @Query("select etf from EmployeeTrackingForm etf order by etf.organizationalDepartmentWorkingItem.workingItem.name, etf.status.name, etf.user.person.firstName, etf.user.person.lastName")
-    List<EmployeeTrackingForm> findAllOrderedByEmployee();
-
-    @Query("select etf from EmployeeTrackingForm etf where (:#{#dateHelper.startDate == null} = true or :#{#dateHelper.startDate} <= etf.taskEndDate) and" +
-            "(:#{#dateHelper.endDate == null} = true or :#{#dateHelper.endDate} >= etf.taskEndDate) order by etf.user.id, etf.organizationalDepartmentWorkingItem.workingItem.name, etf.status.name")
-    List<EmployeeTrackingForm> findAllByTime(@Param("dateHelper") DateHelper dateHelper);
 
     @Query("select etf from EmployeeTrackingForm etf join OrganizationalDepartmentWorkingItem odwi on etf.organizationalDepartmentWorkingItem.id = odwi.id where odwi.organizationalDepartment.id = :id and (:#{#employeeTrackingFormFilter.workingItemId} is null or :#{#employeeTrackingFormFilter.workingItemId} = etf.organizationalDepartmentWorkingItem.workingItem.id) and" +
             "(:#{#employeeTrackingFormFilter.getFirstName() == null} = true or lower(etf.user.person.firstName) like %:#{#employeeTrackingFormFilter.getFirstName()}%) and" +
@@ -117,8 +106,5 @@ public interface EmployeeTrackingFormRepository extends JpaRepository<EmployeeTr
 
     @Query("select etf from EmployeeTrackingForm etf where etf.id=:id and etf.status.name=:name")
     EmployeeTrackingForm findTimeTrackingFormByIdAndStatus(Long id, String name);
-
-    @Query("select etf from EmployeeTrackingForm etf where etf.user.id = :id")
-    List<EmployeeTrackingForm> getAllByUserIdCustom(Long id);
 
 }

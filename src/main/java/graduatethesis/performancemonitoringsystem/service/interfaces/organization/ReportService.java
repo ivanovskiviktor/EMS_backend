@@ -17,7 +17,7 @@ public interface ReportService {
 
     Optional<Report> findById(Long id);
 
-    List<Report> findAllCustom(ReportFilter reportFilter, Boolean approvedByMe, Long userId, Pageable pageable);
+    List<Report> findAllCustom(ReportFilter reportFilter, Long userId, Pageable pageable);
 
     List<Report> findAllCustomForUser(ReportFilter reportFilter, Long id, Pageable pageable);
 
@@ -29,7 +29,7 @@ public interface ReportService {
 
     List<Report> findAllByEmployeeTrackingForm(Long id);
 
-    int getAllCustomCount(ReportFilter reportFilter, Boolean approvedByMe, Long userId);
+    int getAllCustomCount(ReportFilter reportFilter, Long userId);
 
     int getAllCustomForUserCount(ReportFilter reportFilter, Long id);
 
