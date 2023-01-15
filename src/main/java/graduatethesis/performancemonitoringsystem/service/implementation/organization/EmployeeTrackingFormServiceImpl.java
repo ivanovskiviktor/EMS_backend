@@ -114,10 +114,11 @@ public class EmployeeTrackingFormServiceImpl implements EmployeeTrackingFormServ
     @Override
     public void deleteById(Long id) {
         EmployeeTrackingForm employeeTrackingForm = this.employeeTrackingFormRepository.findById(id).orElseThrow(()-> new EmployeeTrackingFormNotFoundException(id));
-
-        if(employeeTrackingForm.getTimeTrackingFormUsers()!=null && employeeTrackingForm.getTimeTrackingFormUsers().size()>0){
-            for(int i=0; i<employeeTrackingForm.getTimeTrackingFormUsers().size(); i++){
-                this.employeeTrackingFormUserService.deleteByEmployeeTrackingFormAndUser(employeeTrackingForm.getId(), employeeTrackingForm.getTimeTrackingFormUsers().get(i).getUser().getId());
+        if(employeeTrackingForm.getReports().size() == 0) {
+            if (employeeTrackingForm.getTimeTrackingFormUsers() != null && employeeTrackingForm.getTimeTrackingFormUsers().size() > 0) {
+                for (int i = 0; i < employeeTrackingForm.getTimeTrackingFormUsers().size(); i++) {
+                    this.employeeTrackingFormUserService.deleteByEmployeeTrackingFormAndUser(employeeTrackingForm.getId(), employeeTrackingForm.getTimeTrackingFormUsers().get(i).getUser().getId());
+                }
             }
         }
 
